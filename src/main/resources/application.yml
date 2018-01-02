@@ -1,3 +1,9 @@
+#management endpoints on a separate port
+management:
+  port: 8091
+  security:
+    enabled: false # management port is internal only. no need to secure it.
+    
 # ===============================
 # = Mysql configurations
 # ===============================
