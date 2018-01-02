@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jeonguk.web.entity.Post;
 import com.jeonguk.web.service.PostService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
 public class PostController extends AbstractRestHandler {
     
@@ -27,7 +30,8 @@ public class PostController extends AbstractRestHandler {
     @RequestMapping(value = "/api/posts/{id}", method = RequestMethod.GET,
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.OK)
-    public Post findOnePost(@PathVariable("id") Long id) {
+    @ApiOperation(value = "Get a single post.", notes = "You have to provide a valid post ID.")
+    public Post findOnePost(@ApiParam(value = "The ID of the post.", required = true) @PathVariable("id") Long id) {
         return postService.findPostById(id);
     }
 
@@ -37,7 +41,10 @@ public class PostController extends AbstractRestHandler {
     @ResponseStatus(HttpStatus.OK)
     public
     @ResponseBody
-    Page<Post> getAllPosts(@RequestParam(value = "page", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer page,
+    @ApiOperation(value = "Get a paginated list of all posts.", notes = "The list is paginated. You can provide a page number (default 0) and a page size (default 100)")
+    Page<Post> getAllPosts(@ApiParam(value = "The page number (zero-based)", required = true) 
+                           @RequestParam(value = "page", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer page,
+                           @ApiParam(value = "Tha page size", required = true) 
                            @RequestParam(value = "size", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer size) {
         return postService.getAllPosts(page, size);
     }
@@ -46,9 +53,10 @@ public class PostController extends AbstractRestHandler {
             consumes = {"application/json", "application/xml"},
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPost(@RequestBody Post city,
+    @ApiOperation(value = "Create a post resource.", notes = "Returns the URL of the new resource in the Location header.")
+    public void createPost(@RequestBody Post post,
             HttpServletRequest request, HttpServletResponse response) {
-        Post createPost = postService.savePost(city);
+        Post createPost = postService.savePost(post);
         response.setHeader("Location", request.getRequestURL().append("/").append(createPost.getId()).toString());
     }
 
@@ -56,15 +64,17 @@ public class PostController extends AbstractRestHandler {
             consumes = {"application/json", "application/xml"},
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void modifyPost(@PathVariable("id") Long id, @RequestBody Post city) {
+    @ApiOperation(value = "Update a post resource.", notes = "You have to provide a valid post ID in the URL and in the payload. The ID attribute can not be updated.")
+    public void modifyPost(@ApiParam(value = "The ID of the existing post resource.", required = true) @PathVariable("id") Long id, @RequestBody Post post) {
         checkResourceFound(this.postService.findPostById(id));
-        postService.updatePost(city);
+        postService.updatePost(post);
     }
 
     @RequestMapping(value = "/api/posts/{id}", method = RequestMethod.DELETE,
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePost(@PathVariable("id") Long id) {
+    @ApiOperation(value = "Delete a post resource.", notes = "You have to provide a valid post ID in the URL. Once deleted the resource can not be recovered.")
+    public void deletePost(@ApiParam(value = "The ID of the existing post resource.", required = true) @PathVariable("id") Long id) {
         checkResourceFound(this.postService.findPostById(id));
         postService.deletePost(id);
     }
