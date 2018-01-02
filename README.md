@@ -36,6 +36,20 @@ http://localhost:8091/metrics
 ```
 
 ##
+### TEST using CURL
+
+- data add
+```
+curl -d '{"title":"post title", "content":"post content"}' -H "Content-Type: application/json" -X POST http://localhost:8080/api/posts
+```
+
+- data get cache TimeUnit.SECONDS 10
+```
+curl http://localhost:8080/api/posts/1
+```
+
+
+##
 ### Swagger-ui REST API Reference
 - http://localhost:8080/swagger-ui.html
 
