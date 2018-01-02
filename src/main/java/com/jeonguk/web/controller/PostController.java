@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jeonguk.web.entity.Post;
 import com.jeonguk.web.service.PostService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
+@Api(tags = {"posts"})
 public class PostController extends AbstractRestHandler {
     
     @Autowired
