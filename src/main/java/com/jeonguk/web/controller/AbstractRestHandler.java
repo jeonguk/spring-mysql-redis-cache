@@ -1,11 +1,8 @@
 package com.jeonguk.web.controller;
 
-import java.util.zip.DataFormatException;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.jeonguk.web.domain.RestErrorInfo;
+import com.jeonguk.web.exception.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
@@ -14,12 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
-import com.jeonguk.web.domain.RestErrorInfo;
-import com.jeonguk.web.exception.ResourceNotFoundException;
+import javax.servlet.http.HttpServletResponse;
+import java.util.zip.DataFormatException;
 
+@Slf4j
 public abstract class AbstractRestHandler implements ApplicationEventPublisherAware {
-    
-    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+
     protected ApplicationEventPublisher eventPublisher;
 
     protected static final String  DEFAULT_PAGE_SIZE = "100";

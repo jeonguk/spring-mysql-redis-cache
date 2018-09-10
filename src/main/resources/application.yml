@@ -38,9 +38,8 @@ spring:
   jpa:
     database: MYSQL
     show-sql: true
-    format-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     database-platform: MYSQL
     properties:
       hibernate:
@@ -50,8 +49,14 @@ spring:
 # = Logging configurations
 # ===============================
 logging:
+  pattern:
+    console: "%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n"
+    file: "%d %-5level [%thread] %logger{0} : %msg%n"
   level:
     root: WARN
     com.jeonguk.web: DEBUG
     org.springframework.web: INFO
     org.springframework.security: INFO
+    org:
+      hibernate.SQL: DEBUG
+      hibernate.type.descriptor.sql.BasicBinder: TRACE

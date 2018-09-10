@@ -18,12 +18,12 @@ public class RedisConfig {
     
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        JedisPoolConfig poolConfig = new JedisPoolConfig();
+        final JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(5);
         poolConfig.setTestOnBorrow(true);
         poolConfig.setTestOnReturn(true);
-        
-        JedisConnectionFactory connectionFactory = new JedisConnectionFactory(poolConfig);
+
+        final JedisConnectionFactory connectionFactory = new JedisConnectionFactory(poolConfig);
         connectionFactory.setUsePool(true);
         connectionFactory.setHostName("localhost");
         connectionFactory.setPort(6379);
@@ -33,7 +33,7 @@ public class RedisConfig {
     
     @Bean
     public RedisTemplate<String, Post> redisTemplate() {
-        RedisTemplate<String, Post> redisTemplate = new RedisTemplate<>();
+        final RedisTemplate<String, Post> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setEnableTransactionSupport(true);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -43,7 +43,7 @@ public class RedisConfig {
     
     @Bean
     public StringRedisTemplate stringRedisTemplate() {
-        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate(redisConnectionFactory());
+        final StringRedisTemplate stringRedisTemplate = new StringRedisTemplate(redisConnectionFactory());
         stringRedisTemplate.setEnableTransactionSupport(true);
         return stringRedisTemplate;
     }

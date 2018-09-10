@@ -1,20 +1,11 @@
 package com.jeonguk.web.controller;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.regex.Pattern;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jeonguk.web.SpringMysqlRedisCacheApplication;
+import com.jeonguk.web.entity.Post;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,9 +18,13 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jeonguk.web.SpringMysqlRedisCacheApplication;
-import com.jeonguk.web.entity.Post;
+import java.util.regex.Pattern;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpringMysqlRedisCacheApplication.class)
@@ -40,9 +35,6 @@ public class PostControllerTest {
     
     @Autowired
     WebApplicationContext context;
-    
-    @InjectMocks
-    private PostController postController;
     
     private MockMvc mvc;
     
@@ -63,7 +55,7 @@ public class PostControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(redirectedUrlPattern(RESOURCE_LOCATION_PATTERN))
+                .andExpect(redirectedUrlPattern())
                 .andReturn();
         long id = getResourceIdFromUrl(result.getResponse().getRedirectedUrl());
         
@@ -92,7 +84,7 @@ public class PostControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(redirectedUrlPattern(RESOURCE_LOCATION_PATTERN))
+                .andExpect(redirectedUrlPattern())
                 .andReturn();
         long id = getResourceIdFromUrl(result.getResponse().getRedirectedUrl());
 
@@ -127,8 +119,7 @@ public class PostControllerTest {
         String[] parts = locationUrl.split("/");
         return Long.valueOf(parts[parts.length - 1]);
     }
-
-
+    
     private Post mockPost(String prefix) {
         Post post = new Post(); 
         post.setTitle(prefix + "_title");
@@ -142,12 +133,10 @@ public class PostControllerTest {
     }
 
     // match redirect header URL (aka Location header)
-    private static ResultMatcher redirectedUrlPattern(final String expectedUrlPattern) {
-        return new ResultMatcher() {
-            public void match(MvcResult result) {
-                Pattern pattern = Pattern.compile("\\A" + expectedUrlPattern + "\\z");
-                assertTrue(pattern.matcher(result.getResponse().getRedirectedUrl()).find());
-            }
+    private static ResultMatcher redirectedUrlPattern() {
+        return result -> {
+            Pattern pattern = Pattern.compile("\\A" + PostControllerTest.RESOURCE_LOCATION_PATTERN + "\\z");
+            assertTrue(pattern.matcher(result.getResponse().getRedirectedUrl()).find());
         };
     }
 

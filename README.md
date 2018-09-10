@@ -16,6 +16,14 @@ git clone https://github.com/jeonguk/spring-mysql-redis-cache.git
 cd spring-mysql-redis-cache
 ```
 
+```
+MySQL START
+```
+
+```
+Redis START
+```
+
 ### Build
 ```
 mvn clean package
@@ -48,11 +56,10 @@ curl -d '{"title":"post title", "content":"post content"}' -H "Content-Type: app
 curl http://localhost:8080/api/posts/1
 ```
 
-
 ##
-### Swagger-ui REST API Reference
+### Swagger-ui REST API Reference & Test
 - http://localhost:8080/swagger-ui.html
-
+- Response Content Type : application/json
 
 ##
 ### Redis monitor
